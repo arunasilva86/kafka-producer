@@ -1,0 +1,10 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: producer
+  kafka:
+    bootstrap-servers: localhost:9093
+kafka:
+  topics:
+    payment-topic: payment-events
