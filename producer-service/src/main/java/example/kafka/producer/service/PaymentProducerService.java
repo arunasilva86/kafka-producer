@@ -1,13 +1,14 @@
 package example.kafka.producer.service;
 
 import example.kafka.producer.util.PaymentUtility;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -28,7 +29,7 @@ public class PaymentProducerService {
     public void sendMessageAsynchronously() {
 
         String paymentEvent = PaymentUtility.generateRandomTransaction();
-        kafkaTemplate.send(paymentEventsTopic, null, paymentEvent)
+        kafkaTemplate.send(paymentEventsTopic, UUID.randomUUID().toString(), paymentEvent)
                 .whenComplete((result, throwable) -> {
                     if (throwable == null) {
                         onSuccess(result);

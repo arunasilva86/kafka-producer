@@ -1,0 +1,16 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: consumer
+  kafka:
+    bootstrap-servers: localhost:9093
+    consumer:
+      group-id: payment-processor-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    listener:
+      concurrency: 2
+kafka:
+  topics:
+    payment-topic: payment-events

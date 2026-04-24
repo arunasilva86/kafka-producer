@@ -8,6 +8,7 @@
 
     <modules>
         <module>producer-service</module>
+        <module>consumer-service</module>
         <!-- later -->
         <!-- <module>consumer-service</module> -->
         <!-- <module>common-lib</module> -->
