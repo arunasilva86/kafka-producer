@@ -6,16 +6,22 @@ spring:
   kafka:
     bootstrap-servers: localhost:9093
     producer:
-      acks: all
-      retries: 3
+      acks: all     # tels to kafka that don’t acknowledge my write until the message is safely replicated
+      retries: 3    # set to zero (0) for at most one delivery semantic
       properties:
-        enable.idempotence: true
+        enable.idempotence: true    # No duplicate messages per partition, even with retries
     consumer:
       group-id: payment-processor-group
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      enable-auto-commit: false     # disable kaffa client autocommit happen in every 5 seconds for the fetched records
+      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+        spring.json.trusted.packages: "example.kafka.common"
     listener:
-      concurrency: 2
+      concurrency: 2      # create 2 threads of consumers and start consuming 2 partitions, unless override at the listener method
+      ack-mode: manual    # I will manually commit the offset after consume. Avoiding springs automatic commit when @KafkaListener returns
 kafka:
   topics:
     payment-topic: payment-events

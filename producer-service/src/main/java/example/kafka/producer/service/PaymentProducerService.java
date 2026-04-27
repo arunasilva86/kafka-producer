@@ -1,5 +1,6 @@
 package example.kafka.producer.service;
 
+import example.kafka.common.PaymentEvent;
 import example.kafka.producer.util.PaymentUtility;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,12 +15,12 @@ import java.util.UUID;
 @Slf4j
 public class PaymentProducerService {
 
-    private KafkaTemplate<String, String> kafkaTemplate;
+    private KafkaTemplate<String, PaymentEvent> kafkaTemplate;
 
     private String paymentEventsTopic;
 
     public PaymentProducerService(
-            KafkaTemplate<String, String> kafkaTemplate,
+            KafkaTemplate<String, PaymentEvent> kafkaTemplate,
             @Value("${kafka.topics.payment-topic}") String paymentEventsTopic) {
         this.kafkaTemplate = kafkaTemplate;
         this.paymentEventsTopic = paymentEventsTopic;
@@ -28,7 +29,7 @@ public class PaymentProducerService {
     @Scheduled(fixedRate = 5000)
     public void sendMessageAsynchronously() {
 
-        String paymentEvent = PaymentUtility.generateRandomTransaction();
+        PaymentEvent paymentEvent = PaymentUtility.generateRandomTransaction();
         kafkaTemplate.send(paymentEventsTopic, UUID.randomUUID().toString(), paymentEvent)
                 .whenComplete((result, throwable) -> {
                     if (throwable == null) {
@@ -45,7 +46,7 @@ public class PaymentProducerService {
 
     }
 
-    private void onSuccess(SendResult<String, String> result) {
+    private void onSuccess(SendResult<String, PaymentEvent> result) {
 
         log.info("Received new metadata. \n" +
                         "Topic: {}, Partition: {}, Offset: {}, Timestamp: {}",

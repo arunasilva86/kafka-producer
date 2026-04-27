@@ -1,5 +1,6 @@
 package example.kafka.producer.conf;
 
+import example.kafka.common.PaymentEvent;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +15,7 @@ public class KafkaConfig {
     private String paymentEventsTopic;
 
     @Bean
-    public KafkaTemplate<String, String> getKafkaTemplate (ProducerFactory<String, String> factory) {
+    public KafkaTemplate<String, PaymentEvent> getKafkaTemplate (ProducerFactory<String, PaymentEvent> factory) {
         return new KafkaTemplate<>(factory);
     }
 
