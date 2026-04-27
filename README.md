@@ -12,3 +12,7 @@ It's a multimodule maven project with producer service and consumer service are 
   *  **`mvn spring-boot:run`**
 * Producer is sending a message in every 3 seconds to the kafka broker which supposed to be consumed by the consumer
 * Kafka ui is available in : http://localhost:8090/
+
+# Architecture
+
+![Architecture](docs/architecture.png)
